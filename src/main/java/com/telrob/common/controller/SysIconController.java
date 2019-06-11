@@ -19,5 +19,4 @@ public class SysIconController extends BaseController<SysIcon, SysIconExample, I
 	public BaseService<SysIcon, SysIconExample, Integer> getBaseService() {
 		return sysIconService;
 	}
-
 }

@@ -99,16 +99,20 @@ $(function () {
       'ajax'        : {
     	  url:'<%=path%>/sysIcon/listPageItem.do',
     	  type:'post',
+    	  /*
     	  dataSrc: function (myJson) {
+    		  console.log(myJson);
     		  return myJson;
-    	  }
+    	  }*/
+      },
+      fnDrawCallback:function(n){
+    	  adjustmentHeight();
       },
       'columns' :[
       	  { "data": "id" },
     	  { "data": "name" },
     	  { "data": "name",render:function(val, type, full, callback){
     		 return "<i class='"+val+"'></i>"
-    		  
     	  }},
     	  { "data": "modifyTime" },
       ],
