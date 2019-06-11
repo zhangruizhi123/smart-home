@@ -127,8 +127,13 @@
     	var endOptions=$.extend(defaults,options);
     	BootstrapDialog.confirm(endOptions);
     };
+    
+    /**
+     * 表格初始化
+     */
     $.fn.BaseTable=function(options){
     	var defaults={
+    		  'selected'	:1,//0表示不做任何操作，1表示单选，2表示多选
     		  'paging'      : true,
 		      'lengthChange': true,
 		      "aLengthMenu":[5,10,15,20,30,50,100],
@@ -160,8 +165,40 @@
 		      }
     	};
     	var endOptions=$.extend(defaults,options);
+    	//添加头部信息
+    	if(endOptions.head!=null){
+    		var tr="<tr>";
+    		for(var i=0;i<endOptions.head.length;i++){
+    			var name=endOptions.head[i].name;
+    			tr+="<td>"+name+"</td>";
+    		}
+    		tr+="</tr>";
+    		if(this.find("thead").length>0){
+    			this.find("thead").append(tr);
+    		}
+    		else{
+    			this.append("<thead>"+tr+"</thead>");
+    		}
+    	}
+    	var $table=this.DataTable(endOptions);
+    	//表格是否支持多选
+    	if(endOptions.selected>0){
+    		this.on("click","tbody tr",function(){
+    			if(endOptions.selected==1){
+    				if($(this).hasClass("selected")){
+    					$(this).removeClass("selected");
+    				}else{
+    					$(this).parent().find("tr").removeClass("selected");
+    					$(this).addClass("selected");
+    				}
+    			}else{
+    				//多选的情况
+    				$(this).toggleClass("selected");
+    			}
+    		});
+    	}
     	//返回this对象
-    	return this.DataTable(endOptions);
+    	return $table;
     };
 	
 })(jQuery);
