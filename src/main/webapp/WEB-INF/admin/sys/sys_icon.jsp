@@ -98,7 +98,10 @@ $(function () {
       ],
       'ajax'        : {
     	  url:'<%=path%>/sysIcon/listPageItem.do',
-    	  type:'post'
+    	  type:'post',
+    	  dataSrc: function (myJson) {
+    		  return myJson;
+    	  }
       },
       'columns' :[
       	  { "data": "id" },
