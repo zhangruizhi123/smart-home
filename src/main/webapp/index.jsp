@@ -11,8 +11,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript" src="<%=path%>/js/vue.js"></script>
+<jsp:include page="/js.jsp" />
 </head>
 <body>
 	欢迎进入智能家居管理系统
 </body>
+<script type="text/javascript">
+$(function(){
+	var test={name:'222'};
+	$.ajax({
+		url:'<%=path%>/test/tt.do',
+		data:JSON.stringify(test),
+		type:'post',
+		headers: {
+		      "Content-Type": "application/json;charset=utf-8"
+		},
+		dataType:'json',
+		success:function(json){
+			alert(json);
+		},
+		error:function(){
+			
+		}
+	});
+});
+</script>
 </html>

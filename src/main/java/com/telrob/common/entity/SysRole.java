@@ -3,7 +3,9 @@ package com.telrob.common.entity;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.telrob.common.utils.annotation.Alias;
 
+//@Alias("sys_role")
 public class SysRole {
     /**
      *
