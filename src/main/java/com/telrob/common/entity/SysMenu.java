@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.EqualsExclude;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.telrob.common.utils.annotation.Ignore;
 
 public class SysMenu {
 
@@ -218,6 +221,7 @@ public class SysMenu {
 		this.modifyTime = modifyTime;
 	}
 	
+	@Ignore("")
 	private List<SysMenu> subMenu = new ArrayList<SysMenu>();
 	  
 	  public List<SysMenu> getSubMenu()

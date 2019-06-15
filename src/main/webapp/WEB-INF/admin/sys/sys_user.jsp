@@ -46,7 +46,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                   <th>手机号</th>
                   <th>昵称</th>
                   <th>名字</th>
-                  <th>头像</th>
+                  <th>角色</th>
                   <th>登录ip</th>
                   <th>最后修改时间</th>
                   <th>创建时间</th>
@@ -98,7 +98,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                    <input name="nick" type="text" class="form-control" placeholder="请输入昵称">
 		                  </div>
 		                </div>
-		                
+		                <div class="form-group">
+		                  <label for="password" class="col-sm-2 control-label">角色</label>
+		                  <div class="col-sm-10">
+		                  	<select name="roleId" class="form-control" >
+		                  	</select>
+		                  </div>
+		                </div>
 		                <div class="form-group">
 		                  <label for="password" class="col-sm-2 control-label">密码</label>
 		                  <div class="col-sm-10">
@@ -123,6 +129,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/js.jsp" />
 <script type="text/javascript">
 $(function () {
+	var roleData={};
+	$.ajax({
+		url:'<%=path%>/sysRole/listPageParams.do',
+		type:'post',
+		dataType:'json',
+		async:false,//设置成同步的方法
+		success:function(json){
+			if(json.code==0){
+				roleData=json.data;
+			}else{
+				$.alert({message:json.message});
+			}
+		}
+	});
+	var option="";
+	for(var i=0;i<roleData.length;i++){
+		var item=roleData[i];
+		option+="<option value='"+item.id+"'>"+item.roleName+"</option>";
+	}
+	$("select[name=roleId]").append(option);
     var $table=$('#example2').DataTable({
       'paging'      : true,
       'lengthChange': true,
@@ -137,8 +163,17 @@ $(function () {
       'autoWidth'   : false,
       'stateSave': false,//开启后刷新会显示上一次的内容
       'ajax'        : {
-    	  url:'<%=path%>/sysUser/listPageItem.do',
-    	  type:'post'
+    	  url:'<%=path%>/sysUser/listPageParams.do',
+    	  type:'post',
+    	  data:function(json){
+    		  //参数设置
+    		  var order=json.order[0].dir;
+    		  var index=json.order[0].column;
+    		  var orderName=json.columns[index].data;
+    		  json.orderName=orderName;
+    		  json.orderRole=order;
+    		  return json;
+    	  },
       },
       fnDrawCallback:function(n){
       },
@@ -147,13 +182,16 @@ $(function () {
     	  { "data": "mobile" },
     	  { "data": "nick" },
     	  { "data": "name" },
-    	  { "data": "photoPath",render:function(val, type, full, callback){
-    		  if(val!=null&&val.indexOf("http")==0){
-    			  return "<img style='width:50px;' src='"+val+"'>";
-    		  }else{
-    			  return "<img style='width:50px;' src='<%=path%>"+val+"'>";
+    	  { "data": "roleId",render:function(val, type, full, callback){
+    		  console.log(JSON.stringify(roleData));
+    		  for(var i=0;i<roleData.length;i++){
+    			  if(roleData[i].id==val){
+    				  return roleData[i].roleName;
+    			  }
     		  }
     		  
+    		  
+    		  return "未知";
     	  }},
     	  { "data": "ip" },
     	  { "data": "modityTime" },

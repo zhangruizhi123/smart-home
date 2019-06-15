@@ -97,13 +97,17 @@ $(function () {
     	  {'name':'修改时间'},
       ],
       'ajax'        : {
-    	  url:'<%=path%>/sysIcon/listPageItem.do',
+    	  url:'<%=path%>/sysIcon/listPageParams.do',
     	  type:'post',
-    	  /*
-    	  dataSrc: function (myJson) {
-    		  console.log(myJson);
-    		  return myJson;
-    	  }*/
+    	  data:function(json){
+    		  //参数设置
+    		  var order=json.order[0].dir;
+    		  var index=json.order[0].column;
+    		  var orderName=json.columns[index].data;
+    		  json.orderName=orderName;
+    		  json.orderRole=order;
+    		  return json;
+    	  },
       },
       fnDrawCallback:function(n){
     	  adjustmentHeight();

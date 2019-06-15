@@ -97,8 +97,19 @@ $(function () {
     	  {'name':'修改时间'},
       ],
       'ajax'        : {
-    	  url:'<%=path%>/sysRole/listPageItem.do',
-    	  type:'post'
+    	  url:'<%=path%>/sysRole/listPageParams.do',
+    	  type:'post',
+    	  data:function(json){
+    		  //参数设置
+    		  var order=json.order[0].dir;
+    		  var index=json.order[0].column;
+    		  var orderName=json.columns[index].data;
+    		  json.orderName=orderName;
+    		  json.orderRole=order;
+    		  //条件查询
+    		  //json.param=JSON.stringify(param);
+    		  return json;
+    	  },
       },
       fnDrawCallback:function(n){
     	  adjustmentHeight();
@@ -159,11 +170,6 @@ $(function () {
     	
     });
     
-    $("#test").click(function(){
-    	var row=getSelectRow();
-    	console.log(JSON.stringify(row));
-    });
-    
     $("#edit").click(function(){
     	//获取选中行数据
     	var row=getSelectRow()[0];
@@ -175,6 +181,14 @@ $(function () {
     	$(".userForm")[0].reset();
     	$(".userForm").dataBind({jsonData:row});
     	$("#addUser").modal('show');
+    });
+    $("#seach").click(function(){
+    	param={or:[
+    		{and:[
+    			{name:'roleName',opt:'like',value:'%管理员'}
+    		]}
+    	]};
+    	$table.draw();
     });
     
     $("#save").click(function(){

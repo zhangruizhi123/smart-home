@@ -30,5 +30,5 @@ public  interface BaseMapper<Entity, Example, Key>{
   public  int updateByPrimaryKey(Entity paramEntity);
   
   @SelectProvider(type=SelectBySqlParam.class,method="selectSqlWidthParam")
-  public List<Entity>selectWidthParam(BaseExample baseExample,Class<Entity> cls);
+  public List<Entity>selectWidthParam(BaseExample baseExample) throws Exception;
 }

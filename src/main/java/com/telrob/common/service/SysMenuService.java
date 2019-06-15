@@ -1,22 +1,36 @@
 package com.telrob.common.service;
 
-import com.telrob.common.bean.ResponseResult;
-import com.telrob.common.entity.SysMenu;
-import com.telrob.common.mapper.SysMenuMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.telrob.common.bean.ResponseResult;
+import com.telrob.common.entity.SysMenu;
+import com.telrob.common.entity.SysMenuExample;
+import com.telrob.common.entity.SysRoleMenu;
+import com.telrob.common.entity.SysRoleMenuExample;
+import com.telrob.common.mapper.BaseMapper;
+import com.telrob.common.mapper.SysMenuMapper;
+import com.telrob.common.mapper.SysRoleMenuMapper;
+
 @Service
-public class SysMenuService
+public class SysMenuService extends BaseService<SysMenu, SysMenuExample, Integer>
 {
   @Autowired
   private SysMenuMapper sysMenuMapper;
+  @Autowired
+  private SysRoleMenuMapper sysRoleMenuMapper;
   
-  public ResponseResult listMenu(Integer id)
+  @Override
+  public BaseMapper<SysMenu, SysMenuExample, Integer> getMapper() {
+  	return sysMenuMapper;
+  }
+  
+  public ResponseResult listMenu(Integer id,Integer roleId)
   {
     ResponseResult result = new ResponseResult();
     result.setCode(0);
@@ -28,7 +42,21 @@ public class SysMenuService
     else
     {
       List<SysMenu> resultMenu = new ArrayList<SysMenu>();
-      List<SysMenu> menuList = this.sysMenuMapper.selectByExample(null);
+      SysMenuExample sysMenuExample=null;
+      if(roleId!=null&&roleId>0) {
+    	  SysRoleMenuExample sysRoleMenuExample=new SysRoleMenuExample();
+    	  sysRoleMenuExample.createCriteria().andRoleIdEqualTo(roleId);
+    	  List<SysRoleMenu> roleMenuList=sysRoleMenuMapper.selectByExample(sysRoleMenuExample);
+    	  if(roleMenuList!=null&&roleMenuList.size()>0) {
+    		  List<Integer>menuIdList=new ArrayList<Integer>();
+    		  for(SysRoleMenu menu:roleMenuList) {
+    			  menuIdList.add(menu.getMenuId());
+    		  }
+    		  sysMenuExample=new SysMenuExample();
+        	  sysMenuExample.createCriteria().andIdIn(menuIdList);
+    	  }
+      }
+      List<SysMenu> menuList = sysMenuMapper.selectByExample(sysMenuExample);
       if (menuList != null)
       {
         Map<Integer, SysMenu> menuMap = new HashMap<Integer, SysMenu>();
@@ -55,4 +83,6 @@ public class SysMenuService
     
     return result;
   }
+
+
 }

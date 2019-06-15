@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.Mapping;
  * @author telrob
  *
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.TYPE,ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Mapping
 public @interface Ignore {
-
+	String value() default "";
 }

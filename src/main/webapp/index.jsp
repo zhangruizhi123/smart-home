@@ -18,14 +18,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </body>
 <script type="text/javascript">
 $(function(){
-	var test={name:'222'};
+	var data={name:2};
+	var test={param:JSON.stringify(data),start:2,id:2};
 	$.ajax({
-		url:'<%=path%>/test/tt.do',
-		data:JSON.stringify(test),
+		url:'<%=path%>/sysIcon/listPageParams.do',
+		data:test,
 		type:'post',
-		headers: {
-		      "Content-Type": "application/json;charset=utf-8"
-		},
 		dataType:'json',
 		success:function(json){
 			alert(json);

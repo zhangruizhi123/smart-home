@@ -1,19 +1,13 @@
 package com.telrob.common.mapper;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.telrob.common.entity.BaseExample;
 import com.telrob.common.entity.BaseExample.Criteria;
 import com.telrob.common.entity.BaseExample.Criterion;
-import com.telrob.common.utils.annotation.Alias;
-import com.telrob.common.utils.annotation.Ignore;
 
-public class SelectBySqlParam <Entity>{
-	public String selectSqlWidthParam(BaseExample baseExample,Class<Entity> cls) throws Exception {
+public class SelectBySqlParam {
+	public String selectSqlWidthParam(BaseExample baseExample) throws Exception {
 		String sql="select ";
 		//是否去重
 		if(baseExample.isDistinct()) {
@@ -22,30 +16,13 @@ public class SelectBySqlParam <Entity>{
 		if(baseExample.getColumn()!=null) {
 			sql+=baseExample.getColumn()+ " from ";
 		}else {
-			String column="";
-			Map<String,String>colMap=getTableColumn(cls);
-			Set<String>keyList=colMap.keySet();
-			int size=keyList.size();
-			int i=0;
-			for(String key:keyList) {
-				String val=colMap.get(key);
-				column+=val+" as "+key;
-				if(i<size-1) {
-					column+=",";
-				}else {
-					column+=" ";
-				}
-				i++;
-			}
-			sql+=column+" from ";
+			throw new Exception("not define table Column!");
 		}
 		
 		if(baseExample.getTableName()!=null) {
-			sql +=  baseExample.getTableName();
+			sql +=  baseExample.getTableName()+" ";
 		}else {
-			String tabName=getTableName(cls);
-			baseExample.setTableName(tabName);
-			sql +=  tabName;
+			throw new Exception("not define table name!");
 		}
 		List<Criteria> criteriaList=baseExample.getOredCriteria();
 		if(criteriaList!=null&&criteriaList.size()>0) {
@@ -114,66 +91,5 @@ public class SelectBySqlParam <Entity>{
 			sql+= "order by "+baseExample.getOrderByClause();
 		}
 		return sql;
-	}
-	
-	/**
-	 * 根据类获取类上注解
-	 */
-	
-	
-	public String getTableName(Class<Entity> cls) {
-		Alias ali=cls.getDeclaredAnnotation(Alias.class);
-		if(ali!=null) {
-			return ali.value();
-		}else {
-			String name=cls.getSimpleName();
-			return convert(name);
-		}
-	}
-	
-	public Map<String,String> getTableColumn(Class<Entity> cls){
-		Map<String,String>result=new HashMap<String,String>();
-		//获取所有字段
-		Field[] fdList=cls.getDeclaredFields();
-		if(fdList!=null&&fdList.length>0) {
-			for(Field fd:fdList) {
-				String name=fd.getName();
-				//当是忽略字段时直接跳出
-				if(fd.getDeclaredAnnotation(Ignore.class)!=null) {
-					continue;
-				}
-				Alias ali=fd.getDeclaredAnnotation(Alias.class);
-				//当注解存在时直接取
-				if(ali!=null) {
-					result.put(name, ali.value());
-				}else {
-					//当不存在就使用驼峰转换
-					result.put(name, convert(name));
-				}
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * 将驼峰命名改成分隔符命名
-	 * @param name
-	 * @return
-	 */
-	private String convert(String name) {
-		
-		if(name!=null&&name.length()>0) {
-			StringBuffer buf=new StringBuffer();
-			char[]chArray=name.toCharArray();
-			for(int i=0;i<chArray.length;i++) {
-				char d=chArray[i];
-				if(d>='A'&&d<='Z'&&i>0) {
-					buf.append("_");
-				}
-				buf.append(d);
-			}
-			return buf.toString();
-		}
-		return null;
 	}
 }

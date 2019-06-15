@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-06-11 21:52:25
+Date: 2019-06-15 21:47:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -304,23 +304,21 @@ CREATE TABLE `sys_menu` (
   `number` int(11) DEFAULT '0' COMMENT '排序，越小越靠前',
   `pid` int(11) DEFAULT '0' COMMENT '父菜单id',
   `icon` varchar(255) DEFAULT NULL COMMENT '图标',
-  `c_time` datetime NOT NULL COMMENT '创建时间',
+  `c_time` datetime DEFAULT NULL COMMENT '创建时间',
   `c_user` int(11) DEFAULT '0' COMMENT '创建人',
   `modify_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='菜单';
+) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COMMENT='菜单';
 
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
 INSERT INTO `sys_menu` VALUES ('1', '系统管理', '/view/index.htmls', '0', '0', 'fa fa-sign-in', '2019-06-08 09:29:21', '0', '2019-06-08 21:14:01');
 INSERT INTO `sys_menu` VALUES ('2', '用户管理', '/view/sys.sys_user.htmls', '0', '1', 'fa fa-calendar', '2019-06-08 09:31:17', '0', '2019-06-08 22:03:52');
-INSERT INTO `sys_menu` VALUES ('3', '角色管理', '/view/sys.sys_role.htmls', '0', '1', 'fa fa-calendar', '2019-06-08 09:31:21', '0', '2019-06-11 21:48:20');
-INSERT INTO `sys_menu` VALUES ('4', '菜单管理', '/view/index.htmls', '0', '1', 'fa fa-calendar', '2019-06-08 09:31:25', '0', '2019-06-08 21:15:01');
+INSERT INTO `sys_menu` VALUES ('3', '角色管理', '/view/sys.sys_role.htmls', '0', '1', 'fa fa-group', null, null, '2019-06-15 11:18:51');
 INSERT INTO `sys_menu` VALUES ('5', '设备管理', '/view/index.htmls', '0', '0', 'fa fa-folder', '2019-06-08 09:31:27', '0', '2019-06-08 21:15:02');
-INSERT INTO `sys_menu` VALUES ('6', '属性管理', '/view/index.htmls', '0', '5', 'fa fa-folder', '2019-06-08 09:31:31', '0', '2019-06-08 21:15:04');
-INSERT INTO `sys_menu` VALUES ('7', '项目管理', '/view/index.htmls', '0', '0', 'fa fa-pie-chart', '2019-06-08 10:04:28', '0', '2019-06-08 21:09:43');
-INSERT INTO `sys_menu` VALUES ('8', '图标管理', '/view/sys.sys_icon.htmls', '0', '1', 'fa fa-calendar', '2019-06-08 09:31:17', '0', '2019-06-08 22:03:52');
+INSERT INTO `sys_menu` VALUES ('8', '图标管理', '/view/sys.sys_icon.htmls', '0', '1', 'glyphicon glyphicon-star', null, null, '2019-06-15 11:14:03');
+INSERT INTO `sys_menu` VALUES ('43', '菜单管理', '/view/sys.sys_menu.htmls', '1', '1', 'glyphicon glyphicon-th-large', null, '0', null);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -332,13 +330,31 @@ CREATE TABLE `sys_role` (
   `modify_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `c_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('4', '平台管理员', null, null);
-INSERT INTO `sys_role` VALUES ('3', '系统管理员', null, null);
+INSERT INTO `sys_role` VALUES ('4', '平台管理员', '2019-06-14 09:37:52', '2019-06-14 09:37:50');
+INSERT INTO `sys_role` VALUES ('-1', '系统管理员', '2019-06-15 21:10:37', '2019-06-14 09:37:54');
+INSERT INTO `sys_role` VALUES ('5', '普通用户', '2019-06-15 21:10:41', '2019-06-15 21:10:43');
+
+-- ----------------------------
+-- Table structure for sys_role_menu
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_role_menu`;
+CREATE TABLE `sys_role_menu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) DEFAULT NULL,
+  `menu_id` int(11) DEFAULT NULL,
+  `modify_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of sys_role_menu
+-- ----------------------------
+INSERT INTO `sys_role_menu` VALUES ('8', '4', '5', '2019-06-15 21:46:27');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -346,6 +362,7 @@ INSERT INTO `sys_role` VALUES ('3', '系统管理员', null, null);
 DROP TABLE IF EXISTS `sys_user`;
 CREATE TABLE `sys_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) DEFAULT NULL COMMENT '角色id',
   `mobile` varchar(20) DEFAULT NULL COMMENT '手机号',
   `nick` varchar(40) DEFAULT NULL COMMENT '昵称',
   `name` varchar(40) NOT NULL COMMENT '登录名称',
@@ -356,10 +373,10 @@ CREATE TABLE `sys_user` (
   `c_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `mobile` (`mobile`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='系统用户表';
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', 'admin', 'admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'http://localhost:8080/Base/admin-lte/dist/img/user2-160x160.jpg', '2019-06-11 21:48:31', '0:0:0:0:0:0:0:1', '2019-06-09 08:53:17');
-INSERT INTO `sys_user` VALUES ('11', 'aa', 'aa', 'lis', '47bce5c74f589f4867dbd57e9ca9f808', null, '2019-06-10 21:51:11', null, '2019-06-10 21:51:11');
+INSERT INTO `sys_user` VALUES ('1', '-1', 'admin', 'admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'http://localhost:8080/Base/admin-lte/dist/img/user2-160x160.jpg', '2019-06-15 21:40:13', '0:0:0:0:0:0:0:1', '2019-06-09 08:53:17');
+INSERT INTO `sys_user` VALUES ('12', '4', 'smadmin', 'smadmin', 'smadmin', 'e10adc3949ba59abbe56e057f20f883e', null, '2019-06-15 21:46:54', '0:0:0:0:0:0:0:1', '2019-06-15 21:45:51');

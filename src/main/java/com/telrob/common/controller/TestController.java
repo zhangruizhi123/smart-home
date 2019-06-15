@@ -35,12 +35,12 @@ public class TestController
   
   @RequestMapping("tt")
   @ResponseBody
-  public Object test2() throws ParseException{
+  public Object test2() throws Exception{
 	  List<Date>tm=new ArrayList<Date>();
 	  SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	  tm.add(fmt.parse("2019-06-11 21:10:44"));
-	  BaseExample b=new BaseExample();
+	  BaseExample b=new BaseExample(SysIcon.class);
 	  b.createCriteria().andItemIn("modifyTime", tm);
-	  return sysIconMapper.selectWidthParam(b, SysIcon.class);
+	  return sysIconMapper.selectWidthParam(b);
   }
 }

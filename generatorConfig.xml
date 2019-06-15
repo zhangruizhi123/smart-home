@@ -33,8 +33,8 @@
             <property name="rootInterface" value="com.telrob.common.mapper.BaseMapper"/>
         </javaClientGenerator>
         <!--生成对应表及类名-->
-        <table tableName="sys_role"
-         domainObjectName="SysRole" 
+        <table tableName="sys_role_menu"
+         domainObjectName="SysRoleMenu" 
          enableCountByExample="true" 
          enableUpdateByExample="true" 
          enableDeleteByExample="true" 

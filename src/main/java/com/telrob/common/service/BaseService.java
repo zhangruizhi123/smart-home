@@ -1,7 +1,9 @@
 package com.telrob.common.service;
 
-import com.telrob.common.mapper.BaseMapper;
 import java.util.List;
+
+import com.telrob.common.entity.BaseExample;
+import com.telrob.common.mapper.BaseMapper;
 
 public abstract class BaseService<Entity, Example, Key>
 {
@@ -35,5 +37,8 @@ public abstract class BaseService<Entity, Example, Key>
   public List<Entity> selectByExcmple(Example example)
   {
     return getMapper().selectByExample(example);
+  }
+  public List<Entity> selectWithParam(BaseExample baseExample)throws Exception{
+	  return getMapper().selectWidthParam(baseExample);
   }
 }
