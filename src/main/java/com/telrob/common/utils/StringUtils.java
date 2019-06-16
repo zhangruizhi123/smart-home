@@ -1,6 +1,7 @@
 package com.telrob.common.utils;
 
 import java.security.MessageDigest;
+import java.util.UUID;
 
 public class StringUtils extends org.apache.commons.lang3.StringUtils{
   public static String MD5(String inStr)
@@ -32,5 +33,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
       hexValue.append(Integer.toHexString(val));
     }
     return hexValue.toString();
+  }
+  
+  public static String getUUID() {
+	  UUID uuid=UUID.randomUUID();
+	  return uuid.toString().replace("-", "").toLowerCase();
   }
 }

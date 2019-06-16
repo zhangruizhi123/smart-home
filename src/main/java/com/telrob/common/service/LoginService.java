@@ -37,12 +37,15 @@ public class LoginService{
       user.setIp(getIpAddr(request));
       sysUserMapper.updateByPrimaryKeySelective(user);
       //当是普通用户时候跳转到用户首页
+      /*
       if(user.getRoleId()>0) {
     	  return "redirect:/view/user.index.htmls";
       }else {
     	  //跳转到管理员首页
     	  return "redirect:/view/index.htmls";
       }
+      */
+      return "redirect:/view/index.htmls";
     }
     session.setAttribute("login_msg", "用户名或者密码错误");
     return "redirect:/login.jsp";

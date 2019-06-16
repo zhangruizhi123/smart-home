@@ -2,6 +2,8 @@ package com.telrob.common.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -76,7 +78,7 @@ public abstract class BaseController<Entity, Example, Key>{
    */
   @RequestMapping("/insertSeletive")
   @ResponseBody
-  public ResponseResult insertSeletive(@RequestBody Entity item){
+  public ResponseResult insertSeletive(@RequestBody Entity item,HttpServletRequest request){
     ResponseResult responseResult = new ResponseResult();
     try {
       int result = getBaseService().insertSelective(item);
@@ -92,6 +94,7 @@ public abstract class BaseController<Entity, Example, Key>{
     }catch (Exception e){
       responseResult.setCode(101);
       responseResult.setMessage(e.getMessage());
+      e.printStackTrace();
     }
     return responseResult;
   }
@@ -225,6 +228,7 @@ public abstract class BaseController<Entity, Example, Key>{
 	      responseResult.setCode(0);
 	      responseResult.setMessage("查询成功");
 	    }catch (Exception e){
+	    	e.printStackTrace();
 	      responseResult.setCode(101);
 	      responseResult.setMessage(e.getMessage());
 	    }

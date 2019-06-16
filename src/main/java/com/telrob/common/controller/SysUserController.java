@@ -2,6 +2,8 @@ package com.telrob.common.controller;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,12 +35,12 @@ public class SysUserController extends BaseController<SysUser, SysUserExample, I
 	@RequestMapping("/insertSeletive")
 	@ResponseBody
 	@Override
-	public ResponseResult insertSeletive(@RequestBody SysUser item) {
+	public ResponseResult insertSeletive(@RequestBody SysUser item,HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		System.out.println(item.getPassword());
 		item.setcTime(new Date());
 		item.setModityTime(new Date());
 		item.setPassword(StringUtils.MD5(item.getPassword()));
-		return super.insertSeletive(item);
+		return super.insertSeletive(item,request);
 	}
 }
