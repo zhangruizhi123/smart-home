@@ -17,21 +17,5 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	欢迎进入智能家居管理系统
 </body>
 <script type="text/javascript">
-$(function(){
-	var data={name:2};
-	var test={param:JSON.stringify(data),start:2,id:2};
-	$.ajax({
-		url:'<%=path%>/sysIcon/listPageParams.do',
-		data:test,
-		type:'post',
-		dataType:'json',
-		success:function(json){
-			alert(json);
-		},
-		error:function(){
-			
-		}
-	});
-});
 </script>
 </html>
