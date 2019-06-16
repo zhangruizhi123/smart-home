@@ -380,3 +380,64 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 INSERT INTO `sys_user` VALUES ('1', '-1', 'admin', 'admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'http://localhost:8080/Base/admin-lte/dist/img/user2-160x160.jpg', '2019-06-15 21:40:13', '0:0:0:0:0:0:0:1', '2019-06-09 08:53:17');
 INSERT INTO `sys_user` VALUES ('12', '4', 'smadmin', 'smadmin', 'smadmin', 'e10adc3949ba59abbe56e057f20f883e', null, '2019-06-15 21:46:54', '0:0:0:0:0:0:0:1', '2019-06-15 21:45:51');
+
+
+CREATE TABLE `app_attribute` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) DEFAULT NULL COMMENT '属性名',
+  `field` varchar(40) DEFAULT NULL COMMENT '字段名',
+  `type` int(11) DEFAULT '0' COMMENT '类型 0:未知，1：binary,2:bool,3:char,4:short,5:int,6:double,7:string',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='属性管理';
+
+CREATE TABLE `app_device` (
+  `id` int(11) NOT NULL,
+  `project_id` int(11) DEFAULT NULL COMMENT '项目id',
+  `product_id` int(11) DEFAULT NULL COMMENT '产品id',
+  `device_secret` varchar(40) DEFAULT NULL COMMENT '设备授权标识',
+  `name` varchar(200) DEFAULT NULL COMMENT '设备名称',
+  `mac` varchar(60) DEFAULT NULL COMMENT '设备的mac地址(唯一)',
+  `state` int(11) DEFAULT NULL COMMENT '设备状态 0未激活，1已激活，2离线，3上线',
+  `modify_time` datetime DEFAULT NULL COMMENT '最后一次上线时间',
+  `c_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备表';
+
+CREATE TABLE `app_device_recode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mac` varchar(40) DEFAULT NULL COMMENT '设备mac地址',
+  `attrib_name` varchar(40) DEFAULT NULL COMMENT '属性名',
+  `attrib_value` varchar(255) DEFAULT '' COMMENT '属性值',
+  `type` int(11) DEFAULT NULL COMMENT '类型 0:未知，1：binary,2:bool,3:char,4:short,5:int,6:double,7:string',
+  `product_key` varchar(40) DEFAULT NULL COMMENT '产品key',
+  `device_secret` varchar(40) DEFAULT NULL COMMENT '设备秘钥',
+  `c_time` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备记状态录表';
+
+CREATE TABLE `app_product` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL COMMENT '产品名称',
+  `user_id` int(11) DEFAULT NULL COMMENT '创建用户id',
+  `project_id` int(11) DEFAULT NULL COMMENT '项目id',
+  `product_key` varchar(40) DEFAULT NULL COMMENT '产品key',
+  `attribute` varchar(255) DEFAULT NULL COMMENT '属性(json字符串,从属性表中选择)',
+  `type` int(11) DEFAULT '1' COMMENT '入网方式，1:zigbee网关，2:wifi，3:蜂窝网络',
+  `state` int(11) DEFAULT '0' COMMENT '产品状态，0：未发布，1已发布',
+  `c_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='产品表';
+
+CREATE TABLE `app_project` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_name` varchar(40) DEFAULT NULL COMMENT '项目名称',
+  `project_key` varchar(40) DEFAULT NULL COMMENT '项目key',
+  `user_id` int(11) DEFAULT NULL COMMENT '创建用户id',
+  `c_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `describe` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='项目管理';
+
+
