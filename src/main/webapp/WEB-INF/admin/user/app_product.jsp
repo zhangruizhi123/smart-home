@@ -8,7 +8,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>产品管理</title>
 <jsp:include page="/css.jsp" />
 </head>
 <body>
@@ -24,9 +24,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-            <!-- 
-              <h3 class="box-title">Hover Data Table</h3>
-               -->
              <a class="btn btn-primary btn-sm" id="add">
              <span class="glyphicon glyphicon-plus"></span>
                                 添加</a>
@@ -64,12 +61,49 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <form action="" class="userForm form-horizontal">
 	                <div class="box-body">
 	                	<input name="id" style="display:none;">
+	                	<input name="userId" style="display:none;" value="${user_loginedd.id}">
 	                	<div class="form-group">
-		                  <label for="name" class="col-sm-2 control-label">名称</label>
+		                  <label for="name" class="col-sm-2 control-label">产品名称</label>
 		                  <div class="col-sm-10">
-		                    <input name="roleName" type="text" class="form-control" placeholder="请输入角色名称">
+		                    <input name="name" type="text" class="form-control" placeholder="请输入产品名称">
 		                  </div>
 		                </div>
+		                
+		                <div class="form-group">
+		                  <label for="name" class="col-sm-2 control-label">所属项目</label>
+		                  <div class="col-sm-10">
+		                   <select class="form-control" id="projectId" name="projectId">
+		                   </select>
+		                  </div>
+		                </div>
+		                
+		                <div class="form-group">
+		                  <label for="name" class="col-sm-2 control-label">入网方式</label>
+		                  <div class="col-sm-10">
+		                   <select class="form-control" name="type">
+		                   	<option value="1">zigbee网关</option>
+		                   	<option value="2">wifi</option>
+		                   	<option value="3">蜂窝网络</option>
+		                   </select>
+		                  </div>
+		                </div>
+		                <div class="form-group">
+		                  <label for="state" class="col-sm-2 control-label">状态</label>
+		                  <div class="col-sm-10">
+		                   <select class="form-control" name="state">
+		                   	<option value="0">未发布</option>
+		                   	<option value="1">已发布</option>
+		                   </select>
+		                  </div>
+		                </div>
+		                
+		                 <div class="form-group">
+		                  <label for="state" class="col-sm-2 control-label">属性</label>
+		                  <div class="col-sm-10">
+		                   	<textarea class="form-control" rows="" cols="" name="attribute"></textarea>
+		                  </div>
+		                </div>
+		                
 	                </div>
                 </form>
               </div>
@@ -88,16 +122,51 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/js.jsp" />
 <script type="text/javascript">
 $(function () {
+	//需要传入的参数(查询项目信息)
+	var param={
+			or:[{
+					and:[{
+						value:"${user_loginedd.id}",
+						name:'userId',
+						opt:'='
+					}]
+				}]
+	};
+	var productList={};
+	//加载自己的产品信息
+	$.ajax({
+		url:'<%=path%>/appProject/listPageParams.do',
+		data:{param:JSON.stringify(param)},
+		type:'post',
+		async:false,
+		dataType:'json',
+		success:function(json){
+			if(json.code==0){
+				productList=json.data;
+			}
+		}
+	});
+	//加载项目
+	var option="";
+	for(var i=0;i<productList.length;i++){
+		var item=productList[i];
+		option+="<option value='"+item.id+"'>"+item.projectName+"</option>";
+	}
+	$("#projectId").append(option);
     var $table=$('#example2').BaseTable({
     	'selected':1,
       'head':[
     	  {'name':'编号'},
-    	  {'name':'角色'},
+    	  {'name':'产品名称'},
+    	  {'name':'项目名称'},
+    	  {'name':'产品key'},
+    	  {'name':'属性'},
+    	  {'name':'入网方式'},
+    	  {'name':'状态'},
     	  {'name':'创建时间'},
-    	  {'name':'修改时间'},
       ],
       'ajax'        : {
-    	  url:'<%=path%>/sysRole/listPageParams.do',
+    	  url:'<%=path%>/appProduct/listPageParams.do',
     	  type:'post',
     	  data:function(json){
     		  //参数设置
@@ -116,9 +185,39 @@ $(function () {
       },
       'columns' :[
       	  { "data": "id" },
-    	  { "data": "roleName" },
-    	  { "data": "cTime"},
-    	  { "data": "modifyTime" },
+    	  { "data": "name" },
+    	  { "data": "projectId",render:function(val, type, full, callback){
+    		  for(var i=0;i<productList.length;i++){
+    			  var item=productList[i];
+    			  if(item.id==val){
+    				  return item.projectName;
+    			  }
+    		  }
+    		  return "未知";
+    	  }},
+    	  { "data": "productKey" },
+    	  { "data": "attribute" },
+    	  { "data": "type",render:function(val, type, full, callback){
+    		  if(val==1){
+    			  return "zigbee网关";
+    		  }else if(val==2){
+    			  return "wifi";
+    		  }else if(val==3){
+    			  return "蜂窝网络";
+    		  }else {
+    			  return "未知";
+    		  }
+    	  }},
+    	  { "data": "state" ,render:function(val, type, full, callback){
+    		  if(val==0){
+    			  return "未发布";
+    		  }else if(val==1){
+    			  return "已发布";
+    		  }else{
+    			  return "未知";
+    		  }
+    	  }},
+    	  { "data": "cTime" },
       ],
     });
     function getSelectRow(){
@@ -136,7 +235,7 @@ $(function () {
     $("#add").click(function(){
     	$("#addUser").modal('show');
     	$(".userForm")[0].reset();
-    	$(".userForm")[0].action="<%=path%>/sysRole/insertSeletive.do";
+    	$(".userForm")[0].action="<%=path%>/appProduct/insertSeletive.do";
     });
     $("#delete").click(function(){
     	//获取选中行数据
@@ -151,7 +250,7 @@ $(function () {
                 if(result) {
 	            	var id= row.id;
 	            	$.ajax({
-	            		url:'<%=path%>/sysRole/deleteByPrimaryKey.do',
+	            		url:'<%=path%>/appProduct/deleteByPrimaryKey.do',
 	            		type:'post',
 	            		dataType:'json',
 	            		data:{id:id},
@@ -177,7 +276,7 @@ $(function () {
     		$.alert({massage:"请先选中行"});
     	}
     	//设备表单的action
-    	$(".userForm")[0].action="<%=path%>/sysRole/updateByPrimaryKey.do";
+    	$(".userForm")[0].action="<%=path%>/appProduct/updateByPrimaryKey.do";
     	$(".userForm")[0].reset();
     	$(".userForm").dataBind({jsonData:row});
     	$("#addUser").modal('show');

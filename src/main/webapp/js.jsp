@@ -44,7 +44,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript" src="<%=path %>/admin-lte/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script type="text/javascript" src="<%=path %>/admin-lte/dist/js/pages/dashboard.js"></script>
-
+<!-- Select2 -->
+<script src="<%=path %>/admin-lte/bower_components/select2/dist/js/select2.full.min.js"></script>
 <script src="<%=path %>/admin-lte/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script type="text/javascript" src="<%=path %>/admin-lte/dist/js/demo.js"></script>
