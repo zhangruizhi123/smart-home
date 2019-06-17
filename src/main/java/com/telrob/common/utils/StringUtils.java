@@ -1,6 +1,9 @@
 package com.telrob.common.utils;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class StringUtils extends org.apache.commons.lang3.StringUtils{
@@ -38,5 +41,31 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
   public static String getUUID() {
 	  UUID uuid=UUID.randomUUID();
 	  return uuid.toString().replace("-", "").toLowerCase();
+  }
+  
+  public static String getRandomId() {
+	  BigInteger dev=new BigInteger("62");
+	  BigInteger zer=new BigInteger("0");
+	  long currentTime=System.currentTimeMillis();
+	  int rand=(int) ((Math.random()*9+1)*10000);
+	  BigInteger big=new BigInteger(currentTime+""+rand);
+	  List<Integer>list=new ArrayList<Integer>();
+	  do {
+		  int mod=big.mod(dev).intValue();
+		  list.add(mod);
+		  big=big.divide(dev);
+	  }while(big.compareTo(zer)>0);
+	  String result="";
+	  for(int i=list.size()-1;i>=0;i--) {
+		  int temp=list.get(i);
+		  if(temp<10) {
+			  result+=temp;
+		  }else if(temp<36) {
+			  result+=(char)(temp-10+'A');
+		  }else {
+			  result+=(char)(temp-36+'a');
+		  }
+	  }
+	  return result;
   }
 }

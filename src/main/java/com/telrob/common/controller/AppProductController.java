@@ -1,5 +1,7 @@
 package com.telrob.common.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,8 @@ public class AppProductController extends BaseController<AppProduct, AppProductE
 	@RequestMapping("/insertSeletive")
 	@ResponseBody
 	public ResponseResult insertSeletive(@RequestBody AppProduct item, HttpServletRequest request) {
-		item.setProductKey(StringUtils.getUUID());
+		item.setProductKey(StringUtils.getRandomId());
+		item.setcTime(new Date());
 		return super.insertSeletive(item, request);
 	}
 }

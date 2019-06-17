@@ -41,7 +41,7 @@ public class AppProjectController extends BaseController<AppProject, AppProjectE
 		item.setUserId(id);
 		item.setModifyTime(new Date());
 		item.setcTime(new Date());
-		item.setProjectKey(StringUtils.getUUID());
+		item.setProjectKey(StringUtils.getRandomId());
 		return super.insertSeletive(item,request);
 	}
 }
