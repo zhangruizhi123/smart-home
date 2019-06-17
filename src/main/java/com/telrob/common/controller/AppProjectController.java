@@ -44,5 +44,4 @@ public class AppProjectController extends BaseController<AppProject, AppProjectE
 		item.setProjectKey(StringUtils.getUUID());
 		return super.insertSeletive(item,request);
 	}
-
 }

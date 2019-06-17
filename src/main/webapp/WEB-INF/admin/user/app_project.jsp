@@ -72,6 +72,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                    <input name="projectName" type="text" class="form-control" placeholder="请输入角色名称">
 		                  </div>
 		                </div>
+		                
+		                <div class="form-group">
+		                  <label for="projectName" class="col-sm-2 control-label">描述</label>
+		                  <div class="col-sm-10">
+		                    <textarea name="remarks" rows="" class="form-control"  placeholder="请输入项目描述" cols=""></textarea>
+		                  </div>
+		                </div>
+		                
 	                </div>
                 </form>
               </div>
@@ -90,6 +98,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <jsp:include page="/js.jsp" />
 <script type="text/javascript">
 $(function () {
+	//需要传入的参数
+	var param={
+			or:[{
+					and:[{
+						value:"${user_loginedd.id}",
+						name:'userId',
+						opt:'='
+					}]
+				}]
+	};
     var $table=$('#example2').BaseTable({
     	'selected':1,
       'head':[
@@ -110,6 +128,7 @@ $(function () {
     		  var orderName=json.columns[index].data;
     		  json.orderName=orderName;
     		  json.orderRole=order;
+    		  json.param=JSON.stringify(param);
     		  return json;
     	  },
       },
@@ -155,7 +174,7 @@ $(function () {
                 if(result) {
 	            	var id= row.id;
 	            	$.ajax({
-	            		url:'<%=path%>/sysRole/deleteByPrimaryKey.do',
+	            		url:'<%=path%>/appProject/deleteByPrimaryKey.do',
 	            		type:'post',
 	            		dataType:'json',
 	            		data:{id:id},
@@ -181,7 +200,7 @@ $(function () {
     		$.alert({massage:"请先选中行"});
     	}
     	//设备表单的action
-    	$(".userForm")[0].action="<%=path%>/sysRole/updateByPrimaryKey.do";
+    	$(".userForm")[0].action="<%=path%>/appProject/updateByPrimaryKey.do";
     	$(".userForm")[0].reset();
     	$(".userForm").dataBind({jsonData:row});
     	$("#addUser").modal('show');

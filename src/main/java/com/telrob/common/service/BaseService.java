@@ -31,7 +31,7 @@ public abstract class BaseService<Entity, Example, Key>
   
   public int updatePrymaryKey(Entity entity)
   {
-    return getMapper().updateByPrimaryKey(entity);
+    return getMapper().updateByPrimaryKeySelective(entity);
   }
   
   public List<Entity> selectByExcmple(Example example)
