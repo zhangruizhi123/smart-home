@@ -10,10 +10,115 @@ Target Server Type    : MYSQL
 Target Server Version : 50540
 File Encoding         : 65001
 
-Date: 2019-06-15 21:47:28
+Date: 2019-06-17 21:46:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for app_attribute
+-- ----------------------------
+DROP TABLE IF EXISTS `app_attribute`;
+CREATE TABLE `app_attribute` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) DEFAULT NULL COMMENT '属性名',
+  `field` varchar(40) DEFAULT NULL COMMENT '字段名',
+  `type` int(11) DEFAULT '0' COMMENT '类型 0:未知，1：binary,2:bool,3:char,4:short,5:int,6:double,7:string',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='属性管理';
+
+-- ----------------------------
+-- Records of app_attribute
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for app_device
+-- ----------------------------
+DROP TABLE IF EXISTS `app_device`;
+CREATE TABLE `app_device` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL COMMENT '项目id',
+  `product_id` int(11) DEFAULT NULL COMMENT '产品id',
+  `device_secret` varchar(40) DEFAULT NULL COMMENT '设备授权标识',
+  `name` varchar(200) DEFAULT NULL COMMENT '设备名称',
+  `mac` varchar(60) DEFAULT NULL COMMENT '设备的mac地址(唯一)',
+  `state` int(11) DEFAULT NULL COMMENT '设备状态 0未激活，1已激活，2离线，3上线',
+  `modify_time` datetime DEFAULT NULL COMMENT '最后一次上线时间',
+  `c_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='设备表';
+
+-- ----------------------------
+-- Records of app_device
+-- ----------------------------
+INSERT INTO `app_device` VALUES ('3', null, '1', null, null, '111', '2222', null, null, null);
+INSERT INTO `app_device` VALUES ('4', null, null, null, 'BWpz9VfWx5', null, null, null, null, '2019-06-17 21:45:12');
+
+-- ----------------------------
+-- Table structure for app_device_recode
+-- ----------------------------
+DROP TABLE IF EXISTS `app_device_recode`;
+CREATE TABLE `app_device_recode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mac` varchar(40) DEFAULT NULL COMMENT '设备mac地址',
+  `attrib_name` varchar(40) DEFAULT NULL COMMENT '属性名',
+  `attrib_value` varchar(255) DEFAULT '' COMMENT '属性值',
+  `type` int(11) DEFAULT NULL COMMENT '类型 0:未知，1：binary,2:bool,3:char,4:short,5:int,6:double,7:string',
+  `product_key` varchar(40) DEFAULT NULL COMMENT '产品key',
+  `device_secret` varchar(40) DEFAULT NULL COMMENT '设备秘钥',
+  `c_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备记状态录表';
+
+-- ----------------------------
+-- Records of app_device_recode
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for app_product
+-- ----------------------------
+DROP TABLE IF EXISTS `app_product`;
+CREATE TABLE `app_product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL COMMENT '产品名称',
+  `user_id` int(11) DEFAULT NULL COMMENT '创建用户id',
+  `project_id` int(11) DEFAULT NULL COMMENT '项目id',
+  `product_key` varchar(40) DEFAULT NULL COMMENT '产品key',
+  `attribute` varchar(255) DEFAULT NULL COMMENT '属性(json字符串,从属性表中选择)',
+  `type` int(11) DEFAULT '1' COMMENT '入网方式，1:zigbee网关，2:wifi，3:蜂窝网络',
+  `state` int(11) DEFAULT '0' COMMENT '产品状态，0：未发布，1已发布',
+  `c_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='产品表';
+
+-- ----------------------------
+-- Records of app_product
+-- ----------------------------
+INSERT INTO `app_product` VALUES ('1', '客厅灯泡', '12', '2', 'da4834b1d01a4c44b0687090b44a6d9e', '{\"name\":\"light\"}', '1', '0', '2019-06-17 20:07:31');
+INSERT INTO `app_product` VALUES ('2', '烟雾报警器', '12', '2', 'bd85df98ca434b22a66f4580a4d869a3', '{\"name\":\"smart\"}', '1', '0', '2019-06-17 20:07:34');
+
+-- ----------------------------
+-- Table structure for app_project
+-- ----------------------------
+DROP TABLE IF EXISTS `app_project`;
+CREATE TABLE `app_project` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_name` varchar(40) DEFAULT NULL COMMENT '项目名称',
+  `project_key` varchar(40) DEFAULT NULL COMMENT '项目key',
+  `user_id` int(11) DEFAULT NULL COMMENT '创建用户id',
+  `c_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `remarks` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='项目管理';
+
+-- ----------------------------
+-- Records of app_project
+-- ----------------------------
+INSERT INTO `app_project` VALUES ('2', '智能家居管理系统', '5f9990cc6f4d4c10ba6209352f047d0a', '12', '2019-06-17 20:04:42', '2019-06-17 20:04:42', '智能家居管理系统');
+INSERT INTO `app_project` VALUES ('3', '测试项目', '8721369546c34a549ed747eeacc42589', '12', '2019-06-17 20:36:33', '2019-06-17 20:36:33', '测试项目');
 
 -- ----------------------------
 -- Table structure for sys_icon
@@ -308,7 +413,7 @@ CREATE TABLE `sys_menu` (
   `c_user` int(11) DEFAULT '0' COMMENT '创建人',
   `modify_time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COMMENT='菜单';
+) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COMMENT='菜单';
 
 -- ----------------------------
 -- Records of sys_menu
@@ -316,8 +421,11 @@ CREATE TABLE `sys_menu` (
 INSERT INTO `sys_menu` VALUES ('1', '系统管理', '/view/index.htmls', '0', '0', 'fa fa-sign-in', '2019-06-08 09:29:21', '0', '2019-06-08 21:14:01');
 INSERT INTO `sys_menu` VALUES ('2', '用户管理', '/view/sys.sys_user.htmls', '0', '1', 'fa fa-calendar', '2019-06-08 09:31:17', '0', '2019-06-08 22:03:52');
 INSERT INTO `sys_menu` VALUES ('3', '角色管理', '/view/sys.sys_role.htmls', '0', '1', 'fa fa-group', null, null, '2019-06-15 11:18:51');
-INSERT INTO `sys_menu` VALUES ('5', '设备管理', '/view/index.htmls', '0', '0', 'fa fa-folder', '2019-06-08 09:31:27', '0', '2019-06-08 21:15:02');
+INSERT INTO `sys_menu` VALUES ('5', '功能管理', '', '0', '0', 'glyphicon glyphicon-cog', null, null, '2019-06-16 20:46:28');
+INSERT INTO `sys_menu` VALUES ('45', '项目管理', '/view/user.app_project.htmls', '1', '5', 'glyphicon glyphicon-list-alt', null, '0', null);
 INSERT INTO `sys_menu` VALUES ('8', '图标管理', '/view/sys.sys_icon.htmls', '0', '1', 'glyphicon glyphicon-star', null, null, '2019-06-15 11:14:03');
+INSERT INTO `sys_menu` VALUES ('47', '设备管理', '/view/user.app_device.htmls', '3', '5', 'glyphicon glyphicon-dashboard', null, '0', null);
+INSERT INTO `sys_menu` VALUES ('46', '产品管理', '/view/user.app_product.htmls', '2', '5', 'glyphicon glyphicon-align-justify', null, '0', null);
 INSERT INTO `sys_menu` VALUES ('43', '菜单管理', '/view/sys.sys_menu.htmls', '1', '1', 'glyphicon glyphicon-th-large', null, '0', null);
 
 -- ----------------------------
@@ -349,12 +457,15 @@ CREATE TABLE `sys_role_menu` (
   `menu_id` int(11) DEFAULT NULL,
   `modify_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of sys_role_menu
 -- ----------------------------
-INSERT INTO `sys_role_menu` VALUES ('8', '4', '5', '2019-06-15 21:46:27');
+INSERT INTO `sys_role_menu` VALUES ('12', '5', '47', '2019-06-17 20:13:38');
+INSERT INTO `sys_role_menu` VALUES ('11', '5', '46', '2019-06-16 20:51:38');
+INSERT INTO `sys_role_menu` VALUES ('10', '5', '45', '2019-06-16 20:51:33');
+INSERT INTO `sys_role_menu` VALUES ('9', '5', '5', '2019-06-16 20:51:30');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -378,66 +489,5 @@ CREATE TABLE `sys_user` (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', '-1', 'admin', 'admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'http://localhost:8080/Base/admin-lte/dist/img/user2-160x160.jpg', '2019-06-15 21:40:13', '0:0:0:0:0:0:0:1', '2019-06-09 08:53:17');
-INSERT INTO `sys_user` VALUES ('12', '4', 'smadmin', 'smadmin', 'smadmin', 'e10adc3949ba59abbe56e057f20f883e', null, '2019-06-15 21:46:54', '0:0:0:0:0:0:0:1', '2019-06-15 21:45:51');
-
-
-CREATE TABLE `app_attribute` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(40) DEFAULT NULL COMMENT '属性名',
-  `field` varchar(40) DEFAULT NULL COMMENT '字段名',
-  `type` int(11) DEFAULT '0' COMMENT '类型 0:未知，1：binary,2:bool,3:char,4:short,5:int,6:double,7:string',
-  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='属性管理';
-
-CREATE TABLE `app_device` (
-  `id` int(11) NOT NULL,
-  `project_id` int(11) DEFAULT NULL COMMENT '项目id',
-  `product_id` int(11) DEFAULT NULL COMMENT '产品id',
-  `device_secret` varchar(40) DEFAULT NULL COMMENT '设备授权标识',
-  `name` varchar(200) DEFAULT NULL COMMENT '设备名称',
-  `mac` varchar(60) DEFAULT NULL COMMENT '设备的mac地址(唯一)',
-  `state` int(11) DEFAULT NULL COMMENT '设备状态 0未激活，1已激活，2离线，3上线',
-  `modify_time` datetime DEFAULT NULL COMMENT '最后一次上线时间',
-  `c_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备表';
-
-CREATE TABLE `app_device_recode` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `mac` varchar(40) DEFAULT NULL COMMENT '设备mac地址',
-  `attrib_name` varchar(40) DEFAULT NULL COMMENT '属性名',
-  `attrib_value` varchar(255) DEFAULT '' COMMENT '属性值',
-  `type` int(11) DEFAULT NULL COMMENT '类型 0:未知，1：binary,2:bool,3:char,4:short,5:int,6:double,7:string',
-  `product_key` varchar(40) DEFAULT NULL COMMENT '产品key',
-  `device_secret` varchar(40) DEFAULT NULL COMMENT '设备秘钥',
-  `c_time` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='设备记状态录表';
-
-CREATE TABLE `app_product` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL COMMENT '产品名称',
-  `user_id` int(11) DEFAULT NULL COMMENT '创建用户id',
-  `project_id` int(11) DEFAULT NULL COMMENT '项目id',
-  `product_key` varchar(40) DEFAULT NULL COMMENT '产品key',
-  `attribute` varchar(255) DEFAULT NULL COMMENT '属性(json字符串,从属性表中选择)',
-  `type` int(11) DEFAULT '1' COMMENT '入网方式，1:zigbee网关，2:wifi，3:蜂窝网络',
-  `state` int(11) DEFAULT '0' COMMENT '产品状态，0：未发布，1已发布',
-  `c_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='产品表';
-
-CREATE TABLE `app_project` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `project_name` varchar(40) DEFAULT NULL COMMENT '项目名称',
-  `project_key` varchar(40) DEFAULT NULL COMMENT '项目key',
-  `user_id` int(11) DEFAULT NULL COMMENT '创建用户id',
-  `c_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `modify_time` datetime DEFAULT NULL COMMENT '修改时间',
-  `describe` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='项目管理';
-
-
+INSERT INTO `sys_user` VALUES ('1', '-1', 'admin', 'admin', 'admin', 'e10adc3949ba59abbe56e057f20f883e', 'http://localhost:8080/Base/admin-lte/dist/img/user2-160x160.jpg', '2019-06-17 20:10:47', '127.0.0.1', '2019-06-09 08:53:17');
+INSERT INTO `sys_user` VALUES ('12', '5', 'smadmin', 'smadmin', 'smadmin', 'e10adc3949ba59abbe56e057f20f883e', null, '2019-06-17 21:44:29', '127.0.0.1', null);
