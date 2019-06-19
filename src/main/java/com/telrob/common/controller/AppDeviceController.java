@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,7 +31,7 @@ public class AppDeviceController extends BaseController<AppDevice, AppDeviceExam
 	@RequestMapping("/insertSeletive")
 	@ResponseBody
 	@Override
-	public ResponseResult insertSeletive(AppDevice item, HttpServletRequest request) {
+	public ResponseResult insertSeletive(@RequestBody AppDevice item, HttpServletRequest request) {
 		item.setcTime(new Date());
 		item.setDeviceSecret(StringUtils.getRandomId());
 		return super.insertSeletive(item, request);

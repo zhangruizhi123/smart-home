@@ -71,7 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                <div class="form-group">
 		                  <label for="name" class="col-sm-2 control-label">所属产品</label>
 		                  <div class="col-sm-10">
-		                   <select class="form-control" id="productId" name="projectId">
+		                   <select class="form-control" id="productId" name="productId">
 		                   </select>
 		                  </div>
 		                </div>
