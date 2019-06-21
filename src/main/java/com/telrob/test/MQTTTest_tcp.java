@@ -22,17 +22,17 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 public class MQTTTest_tcp {
 
     /**MQTT服务端ip及端口*/
-    private static String host = "tcp://127.0.0.1:1883";
+    private static String host = "tcp://192.168.65.133:1883";
     /**账号*/
     private static String username = "li2080";
     /**密码*/
     private static String password = "123";
     /**订阅的主题*/
-    private static String subTopic = "a/b/c";
+    private static String subTopic = "111";
     /**clientID*/
     private static String clientId = "li2080";
     /**发布的主题*/
-    private static String pubTopic = "a/b/c";
+    private static String pubTopic = "111";
     /**MQTT-Client*/
     private static MqttClient client;
     
@@ -64,7 +64,7 @@ public class MQTTTest_tcp {
             MQTTTest_tcp.getClient().setCallback(new MqttCallback() {
 
                 public void connectionLost(Throwable arg0) {
-                    
+                    System.out.println("connectionLost");
                 }
 
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -102,6 +102,7 @@ public class MQTTTest_tcp {
                 conOptions.setCleanSession(true);
                 client.connect(conOptions);
             }
+            System.out.println(client.isConnected());
             if(!client.isConnected()){
                 client.reconnect();
             }

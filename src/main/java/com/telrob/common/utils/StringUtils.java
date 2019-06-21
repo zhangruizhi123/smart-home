@@ -68,4 +68,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils{
 	  }
 	  return result;
   }
+  
+  public static void main(String[] args) {
+	System.out.println(getRandomId());
+}
 }
