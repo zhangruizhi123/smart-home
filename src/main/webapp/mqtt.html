@@ -1,0 +1,55 @@
+<html>
+		<head>
+		<meta charset="utf-8">
+			<title>test mqtt</title>
+		</head>
+		<script type="text/javascript" src="mqtt.min.js"></script>
+		<script type="text/javascript">
+			
+			// 连接选项
+		const options = {
+		      connectTimeout: 4000, // 超时时间
+		      // 认证信息
+		      clientId: 'emqx-connect-via-websocket',
+		      username: 'emqx-connect-via-websocket',
+		      password: 'emqx-connect-via-websocket',
+		}
+		console.log("1");
+		const client = mqtt.connect('ws://192.168.65.133:9001/mqtt', options)
+		console.log("2");
+		client.on('reconnect', function(error) {
+		    console.log('正在重连:', error)
+		})
+
+		client.on('error', function(error) {
+		    console.log('连接失败:', error)
+		})
+
+		// 监听接收消息事件
+		client.on('message', function(topic, message){
+			console.log('收到来自', topic, '的消息', message.toString())
+		})
+
+
+		// 正确示例
+
+		client.on('connect', (e) => {
+			console.log('成功连接服务器')
+			
+			// 订阅一个主题
+			client.subscribe('hello', { qos: 1 }, (error) => {
+				if (!error) {
+					console.log('订阅成功')
+					client.publish('hello', 'Hello EMQ', { qos: 1, rein: false }, (error) => {
+						console.log(error || '发布成功')
+					})
+				}
+			})
+			
+		})
+		</script>
+		<body>
+			
+
+		</body>
+</html>

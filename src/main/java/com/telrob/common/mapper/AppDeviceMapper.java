@@ -74,4 +74,11 @@ public interface AppDeviceMapper extends BaseMapper<AppDevice, AppDeviceExample,
 	 * @mbg.generated
 	 */
 	int updateByPrimaryKey(AppDevice record);
+	/**
+	 * 校验设备登录,返回topic
+	 * @param productKey
+	 * @param deviceSecret
+	 * @return
+	 */
+	AppDevice deviceLogin(@Param("productKey")String productKey, @Param("mac")String mac);
 }

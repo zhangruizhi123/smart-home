@@ -1,5 +1,7 @@
 package com.telrob.common.bean;
 
+import java.util.UUID;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -11,74 +13,64 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 
 public class Mqtt {
 	private static MqttClient client;
-	private long timeout;
-	private boolean isConnect=true;
-	private MqttConnectOptions conOptions=null;
-	
-	public Mqtt(String host,String clientId,String userName,String password,final long time) throws MqttException {
-		timeout=time;
-		client = new MqttClient(host, clientId);
-        conOptions = new MqttConnectOptions();
-        conOptions.setUserName(userName);
-        conOptions.setPassword(password.toCharArray());
-        conOptions.setCleanSession(false);
-        //conOptions.setConnectionTimeout(10); 
-        //conOptions.setKeepAliveInterval(20); 
-        //conOptions.setAutomaticReconnect(true);
-        client.connect(conOptions);
-        System.out.println("+++++++++++++++++++++++");
-        System.out.println(client.isConnected());
-       
+	private static long timeout;
+	private static boolean isConnect=true;
+	private static MqttConnectOptions conOptions=null;
+	private static String topic="";
+	public Mqtt(String host,String clientId,String userName,String password,final long time,String topic,MqttCallback callback) throws MqttException {
+		//当初始化第一次时设置
+		if(conOptions==null) {
+			this.topic=topic;
+			timeout=time;
+			conOptions = new MqttConnectOptions();
+			conOptions.setUserName(userName);
+			conOptions.setPassword(password.toCharArray());
+			conOptions.setCleanSession(false);
+			//conOptions.setConnectionTimeout(10); 
+			//conOptions.setKeepAliveInterval(20); 
+			//conOptions.setAutomaticReconnect(true);
+		}
+		if(client==null) {
+			client = new MqttClient(host, clientId+UUID.randomUUID().toString());
+			client.connect(conOptions);
+			client.subscribe(topic, 0);
+			if(callback!=null) {
+				client.setCallback(callback);
+			}
+		}
 	}
-	
+	/**
+	 * 开启线程监听状态
+	 * @throws MqttException
+	 */
 	public void init() throws MqttException {
-		client.subscribe("111", 0);
-		client.setCallback(new MqttCallback() {
-				
-				public void messageArrived(String topic, MqttMessage message) throws Exception {
-					// TODO Auto-generated method stub
-					System.out.println("topic:"+topic);
-					System.out.println(message);
-				}
-				
-				public void deliveryComplete(IMqttDeliveryToken token) {
-					// TODO Auto-generated method stub
-					System.out.println("##########deliveryComplete");
-				}
-				
-				public void connectionLost(Throwable cause) {
-					// TODO Auto-generated method stub
-					System.out.println("::::::connectionLost");
-					isConnect=false;
-				}
-			});
-		
 		new Thread() {
 			@Override
 			public void run() {
 				while(true) {
-					if(isConnect==false) {
+					if(client.isConnected()==false) {
 						try {
 							client.connect(conOptions);
 							if(client.isConnected()) {
-								client.subscribe("111", 0);
+								client.subscribe(topic, 0);
 								isConnect=true;
 								System.out.println("连接成功");
 							}else {
 								System.out.println("连接失败");
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							//e.printStackTrace();
 						}
 					}
 					try {
-						Thread.sleep(1000*5);
+						Thread.sleep(timeout);
 					} catch (Exception e) {
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
 				}
 			}
-		}.start();;
+		}.start();
+		
 	}
 	public MqttClient getClient() throws MqttException {
 		if(!client.isConnected()){
@@ -99,10 +91,4 @@ public class Mqtt {
 		return tocken.isComplete();
 	}
 	
-	public void subscribe(String subTopic,MqttCallback callback) throws MqttException {
-		client=getClient();
-		client.setCallback(callback);
-		client.subscribe(subTopic, 0);
-	}
-
 }

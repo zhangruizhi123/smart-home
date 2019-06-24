@@ -36,6 +36,8 @@
 		<constructor-arg name="userName" value="${mqtt.userName}"/>
 		<constructor-arg name="password" value="${mqtt.password}"/>
 		<constructor-arg name="time" value="${mqtt.completionTimeout}"/>
+		<constructor-arg name="topic" value="${mqtt.topic}"/>
+		<constructor-arg name="callback" ref="mqttMessageProcess"/>
 	</bean>
 
 
