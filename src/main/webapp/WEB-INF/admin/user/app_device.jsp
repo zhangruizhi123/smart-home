@@ -190,6 +190,7 @@ $(function () {
     	  {'name':'状态'},
     	  {'name':'创建时间'},
     	  {'name':'最近上线时间'},
+    	  {'name':'调试'},
       ],
       'ajax'        : {
     	  url:'<%=path%>/appDevice/listPageParams.do',
@@ -239,6 +240,9 @@ $(function () {
     	  }},
     	  { "data": "cTime" },
     	  { "data": "modifyTime" },
+    	  { "data": "topic",render:function(val){
+    		  return "<a href='<%=path%>/mqtt.jsp?topic="+val+"' target='_blank' >GO</>"
+    	  }},
       ],
     });
     function getSelectRow(){
