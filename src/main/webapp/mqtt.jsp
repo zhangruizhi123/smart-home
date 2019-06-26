@@ -18,6 +18,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <title>Insert title here</title>
 <jsp:include page="/css.jsp" />
 <script type="text/javascript" src="<%=path%>/js/mqtt.min.js"></script>
+<script type="text/javascript" src="<%=path%>/js/echarts.min.js"></script>
 </head>
 <body>
 	<div class="content">
@@ -27,6 +28,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 			<div class="box-body">
 				<form action="" class="form-horizontal">
+					<div class="form-group">
+						<div class="col-sm-2"></div>
+						<div class="col-sm-8" id="main" style="height:300px;"></div>
+					</div>
 				 <!-- textarea -->
 			        <div class="form-group">
 			          <label class="col-sm-2 control-label">设备属性</label>
@@ -52,6 +57,36 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </body>
 <jsp:include page="/js.jsp" />
 <script type="text/javascript">
+// 基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('main'));
+
+// 指定图表的配置项和数据
+var option = {
+		tooltip : {
+			formatter: "{a} <br/>{b} : {c}℃"
+		},
+		toolbox: {
+			/*
+			feature: {
+				restore: {},
+				saveAsImage: {}
+			}
+			*/
+		},
+		series: [
+			{
+				name: '温度',
+				type: 'gauge',
+				detail: {formatter:'{value}℃'},
+				data: [{value: 30, name: '当前温度'}]
+			}
+		]
+	};
+
+// 使用刚指定的配置项和数据显示图表。
+myChart.setOption(option);
+
+
 	if( typeof(WebSocket) != "function" ) {
 	    alert("您的浏览器不支持Websocket通信协议，请更换浏览器为Chrome或者Firefox再次使用！")
 	}
