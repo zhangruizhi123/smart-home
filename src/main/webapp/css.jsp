@@ -42,6 +42,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 <!-- Select2 -->
   <link rel="stylesheet" href="<%=path %>/admin-lte/bower_components/select2/dist/css/select2.min.css">
+  <script type="text/javascript" src="<%=path %>/admin-lte/bower_components/bootstrap-validate/bootstrapValidator.min.css"></script>
 <style type="text/css">
 /*表格选中时的样式*/
 tbody .selected{

@@ -47,6 +47,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!-- Select2 -->
 <script src="<%=path %>/admin-lte/bower_components/select2/dist/js/select2.full.min.js"></script>
 <script src="<%=path %>/admin-lte/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
+<script type="text/javascript" src="<%=path %>/admin-lte/bower_components/bootstrap-validate/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="<%=path %>/admin-lte/bower_components/bootstrap-validate/zh_CN.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script type="text/javascript" src="<%=path %>/admin-lte/dist/js/demo.js"></script>
 <script type="text/javascript" src="<%=path%>/js/vue.js"></script>
@@ -62,5 +64,14 @@ function adjustmentHeight(){
 
 $(function(){
 	adjustmentHeight();
+	//添加表单校验
+	$('form').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        }
+	});
 });
 </script>
