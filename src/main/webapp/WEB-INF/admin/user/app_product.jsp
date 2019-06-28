@@ -65,7 +65,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                	<div class="form-group">
 		                  <label for="name" class="col-sm-2 control-label">产品名称</label>
 		                  <div class="col-sm-10">
-		                    <input name="name" type="text" class="form-control" placeholder="请输入产品名称">
+		                    <input name="name" type="text" class="form-control"  required="required" placeholder="请输入产品名称">
 		                  </div>
 		                </div>
 		                
@@ -100,7 +100,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                 <div class="form-group">
 		                  <label for="state" class="col-sm-2 control-label">属性</label>
 		                  <div class="col-sm-10">
-		                   	<textarea class="form-control" rows="" cols="" name="attribute"></textarea>
+		                   	<textarea class="form-control" rows="" cols="" required="required" name="attribute"></textarea>
 		                  </div>
 		                </div>
 		                
