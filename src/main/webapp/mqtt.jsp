@@ -29,11 +29,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="box-body">
 				<form action="" class="form-horizontal">
 					<div class="form-group">
-						<div class="col-sm-2"></div>
-						<div class="col-sm-8" id="main" style="height:300px;"></div>
+						<div class="col-sm-12" >
+							
+						</div>
+						<button id="switch" class="btn btn-block btn-success btn-lg col-sm-6">
+						<i class="glyphicon glyphicon-play-circle"></i>
+						开关
+						</button>
+						
+					</div>
+					<div class="form-group">
+						<div class="col-sm-6" id="main" style="height:300px;"></div>
+						<div class="col-sm-6" id="temp" style="height:300px;"></div>
 					</div>
 				 <!-- textarea -->
-			        <div class="form-group">
+			        <div class="form-group visible-md" >
 			          <label class="col-sm-2 control-label">设备属性</label>
 			          <div class="col-sm-8">
 			          	<textarea id="text" class="form-control" rows="5" placeholder="请输入属性的json字符串"></textarea>
@@ -42,7 +52,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			          	<a class="btn btn-success" id="send">发送</a>
 			          </div>
 			        </div>
-			        <div class="form-group">
+			        <div class="form-group visible-md">
 			          <label>日志信息:</label>
 			          <div id="log" style="padding:5px;height:200px;border:1px solid #999;overflow: scroll;">
 			          </div>
@@ -59,6 +69,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript">
 // 基于准备好的dom，初始化echarts实例
 var myChart = echarts.init(document.getElementById('main'));
+var myChart2 = echarts.init(document.getElementById('temp'));
 
 // 指定图表的配置项和数据
 var option = {
@@ -82,9 +93,32 @@ var option = {
 			}
 		]
 	};
+	
+var option2 = {
+		tooltip : {
+			formatter: "{a} <br/>{b} : {c}%"
+		},
+		toolbox: {
+			/*
+			feature: {
+				restore: {},
+				saveAsImage: {}
+			}
+			*/
+		},
+		series: [
+			{
+				name: '湿度',
+				type: 'gauge',
+				detail: {formatter:'{value}%'},
+				data: [{value: 30, name: '当前湿度'}]
+			}
+		]
+	};
 
 // 使用刚指定的配置项和数据显示图表。
 myChart.setOption(option);
+myChart2.setOption(option2);
 
 
 	if( typeof(WebSocket) != "function" ) {
@@ -111,6 +145,13 @@ myChart.setOption(option);
 	
 	// 监听接收消息事件
 	client.on('message', function(topic, message){
+		var msg=message.toString();
+		console.log(msg.slice(16,18));
+		console.log(msg.slice(18,20));
+		option.series[0].data[0].value=msg.slice(16,18);
+		myChart.setOption(option,true);
+		option2.series[0].data[0].value=msg.slice(18,20);
+		myChart2.setOption(option2,true);
 		$("#log").append("<div>"+message.toString()+"</div>");
 		console.log('收到来自', topic, '的消息', message.toString())
 	});
@@ -131,6 +172,10 @@ myChart.setOption(option);
 		$("#send").click(function(){
 			client.publish('/sub/'+getParam("topic"), $("#text").val(), { qos: 0, rein: false }, function(error) {
 				console.log(error || '发布成功')
+			});
+		});
+		$("#switch").click(function(){
+			client.publish('/sub/'+getParam("topic"), "hello world", { qos: 0, rein: false }, function(error) {
 			});
 		});
 	});

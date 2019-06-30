@@ -176,7 +176,7 @@ $(function () {
     		  json.orderName=orderName;
     		  json.orderRole=order;
     		  //条件查询
-    		  //json.param=JSON.stringify(param);
+    		  json.param=JSON.stringify(param);
     		  return json;
     	  },
       },

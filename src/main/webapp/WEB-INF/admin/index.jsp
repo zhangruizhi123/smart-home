@@ -1,8 +1,11 @@
+<%@page import="com.telrob.common.entity.SysUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% 
 String path = request.getContextPath(); 
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/"; 
+SysUser sysUser=(SysUser)session.getAttribute("user_loginedd");
+
 %> 
 <!DOCTYPE html>
 <html>
@@ -119,7 +122,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+  <%  
+  	if(sysUser.getRoleId() >0){
+  %>
+  <iframe id="content" style="width:100%;min-height: 901px;border:0px;" src="<%=path %>/view/user.app_product_index.htmls"></iframe>
+  <% 
+  	}else{
+  %>
   <iframe id="content" style="width:100%;min-height: 901px;border:0px;" src="<%=path %>/view/sys.sys_user.htmls"></iframe>
+  <% 
+  	}
+  %>
+  
   </div>
   <!-- /.content-wrapper -->
 
