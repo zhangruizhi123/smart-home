@@ -15,7 +15,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<title>Insert title here</title>
+<title>智能家居管理系统</title>
+<link rel="shortcut icon" href="<%=path%>/img/favicon.ico" />
 <jsp:include page="/css.jsp" />
 <script type="text/javascript" src="<%=path%>/js/mqtt.min.js"></script>
 <script type="text/javascript" src="<%=path%>/js/echarts.min.js"></script>

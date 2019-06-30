@@ -11,6 +11,7 @@ SysUser sysUser=(SysUser)session.getAttribute("user_loginedd");
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="shortcut icon" href="<%=path%>/img/favicon.ico" />
 <title>智能家居管理系统</title>
 <jsp:include page="/css.jsp" />
 </head>
